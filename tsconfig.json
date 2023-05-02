@@ -1,12 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ES6"],
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
-    "target": "ES2020",
-    "sourceMap": true,
-    "outDir": "dist",
-    "types": ["node", "jest"]
-  },
-  "include": ["src/**/*"]
+    "moduleResolution": "node",
+    "module": "ESNext"
+  }
 }

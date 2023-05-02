@@ -1,5 +1,9 @@
-function add(a: number, b: number) {
-    return a + b;
-}
+import chalk from "chalk";
 
-export default add
+const logger = {
+  success: (msg: string) => chalk.greenBright(msg),
+  error: (msg: string) => chalk.redBright(msg),
+  info: (msg: string) => chalk.blueBright(msg),
+};
+
+export { logger };
