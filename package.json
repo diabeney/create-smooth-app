@@ -8,12 +8,13 @@
     "typecheck": "tsc",
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
-    "build": "rm -rf dist && tsup --watch",
+    "build": "rm -rf dist && tsup",
     "test": "npm run lint && jest",
     "start": "node dist/index.mjs"
   },
+  "type": "module",
   "files": [
-    "./dist"
+    "./dist/**/*"
   ],
   "repository": {
     "type": "git",
