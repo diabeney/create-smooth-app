@@ -1,7 +1,7 @@
 import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-
+// import { resolveProjectDir } from "./utils/utils";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -11,7 +11,7 @@ const PKG_ROOT = join(__dirname, "../");
 
 const projectOpts = {
   name: "diabene",
-  type: "react",
+  type: "npm",
 };
 
 async function getTmplDir() {
@@ -49,7 +49,8 @@ async function composeFilesAndDir(dir: string, newDir: string) {
 }
 
 async function scaffoldProject(pkgDir: string) {
-  const userDir = join(__dirname, "userproject");
+  const userDir = join(__dirname, "new-app");
+  // const userDir = resolveProjectDir(pkgDir); // final
   await mkdir(userDir);
   composeFilesAndDir(pkgDir, userDir);
 }
