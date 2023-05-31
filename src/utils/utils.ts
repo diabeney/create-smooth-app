@@ -6,4 +6,23 @@ const logger = {
   info: (msg: string) => chalk.blueBright(msg),
 };
 
-export { logger };
+function validPackageName(name: string) {
+  return /^[a-zA-Z0-9-_.]+$/.test(name);
+}
+
+function resolveProjectDir(input: string) {
+  let rootDir: string;
+  if (input === ".") {
+    rootDir = process.cwd();
+  } else {
+    if (validPackageName(input)) {
+      rootDir = input;
+    } else {
+      throw new Error("Invalid Package name");
+    }
+  }
+
+  return rootDir;
+}
+
+export { logger, resolveProjectDir };

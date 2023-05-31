@@ -11,7 +11,7 @@ const PKG_ROOT = join(__dirname, "../");
 
 const projectOpts = {
   name: "diabene",
-  type: "npm",
+  type: "react",
 };
 
 async function getTmplDir() {
