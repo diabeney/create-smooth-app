@@ -1,6 +1,4 @@
-// import { logger } from "./utils/utils";
-import { readdir } from "node:fs/promises";
-// import { } from "fs";
+import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -9,29 +7,54 @@ const __dirname = dirname(__filename);
 
 // Building static version first
 
-interface IProjectConfigs {
-  dir: string;
-}
-
-const projectConfigs: IProjectConfigs = {
-  dir: "",
-};
-
 const PKG_ROOT = join(__dirname, "../");
 
 const projectOpts = {
   name: "diabene",
-  stack: "npm",
+  type: "npm",
 };
 
-async function getStackDir() {
+async function getTmplDir() {
   const files = await readdir(join(PKG_ROOT, "src/templates"));
-  const isValidStack = files.includes(projectOpts.stack);
+  const isValidStack = files.includes(projectOpts.type);
   if (isValidStack) {
-    return join(PKG_ROOT, `src/templates/${projectOpts.stack}`);
+    return join(PKG_ROOT, `src/templates/${projectOpts.type}`);
   }
 }
 
-getStackDir().then((dir) => {
-  projectConfigs["dir"] = dir;
-});
+async function composeFilesAndDir(dir: string, newDir: string) {
+  try {
+    const files = await readdir(dir);
+    for (const file of files) {
+      const fpath = join(dir, file);
+      const fstat = await stat(fpath);
+      if (fstat.isFile()) {
+        const formmatedFileName = file.startsWith("_")
+          ? file.replace("_", ".")
+          : file;
+        const data = await readFile(fpath, { encoding: "utf-8" });
+        await writeFile(join(newDir, formmatedFileName), data, {
+          encoding: "utf-8",
+        });
+      }
+      if (fstat.isDirectory()) {
+        const subDir = join(newDir, file);
+        await mkdir(subDir);
+        composeFilesAndDir(fpath, subDir);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function scaffoldProject(pkgDir: string) {
+  const userDir = join(__dirname, "userproject");
+  await mkdir(userDir);
+  composeFilesAndDir(pkgDir, userDir);
+}
+
+(async () => {
+  const projectDir = await getTmplDir();
+  scaffoldProject(projectDir);
+})();
