@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { ProjectOptions } from "../types/types";
 
 const logger = {
   success: (msg: string) => chalk.greenBright(msg),
@@ -8,6 +9,10 @@ const logger = {
 
 function validPackageName(name: string) {
   return /^[a-zA-Z0-9-_.]+$/.test(name);
+}
+
+function moduleFormat(obj: ProjectOptions) {
+  return obj.configs.npm.nodeModuleFormat;
 }
 
 function resolveProjectDir(input: string) {
@@ -25,4 +30,4 @@ function resolveProjectDir(input: string) {
   return rootDir;
 }
 
-export { logger, resolveProjectDir };
+export { logger, resolveProjectDir, moduleFormat };

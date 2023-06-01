@@ -2,5 +2,6 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "module": "ESNext"
-  }
+  },
+  "exclude": ["/src/templates"]
 }

@@ -1,45 +1,66 @@
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+#!/usr/bin/env node
+
+import * as fs from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-// import { resolveProjectDir } from "./utils/utils";
+import { ProjectOptions } from "./types/types";
+import { moduleFormat } from "./utils/utils";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Building static version first
-
 const PKG_ROOT = join(__dirname, "../");
 
-const projectOpts = {
+const projectOpts: ProjectOptions = {
   name: "diabene",
   type: "npm",
+  configs: {
+    npm: {
+      nodeModuleFormat: "cjs",
+    },
+  },
 };
 
-async function getTmplDir() {
-  const files = await readdir(join(PKG_ROOT, "src/templates"));
-  const isValidStack = files.includes(projectOpts.type);
-  if (isValidStack) {
-    return join(PKG_ROOT, `src/templates/${projectOpts.type}`);
+function buildConfigs(projectOpts: ProjectOptions, rootDir: string) {
+  const format = moduleFormat(projectOpts);
+  const configName = join(rootDir, "tsconfig.json");
+  const moduleFormatConfig = join(
+    PKG_ROOT,
+    `src/templates/configs/Typescript/tsconfig.${format}.json`
+  );
+  try {
+    const content = fs.readFileSync(moduleFormatConfig, "utf-8");
+    const jsonData = JSON.parse(content);
+    fs.writeFileSync(configName, JSON.stringify(jsonData, null, 2));
+  } catch (err) {
+    console.log("error");
   }
 }
 
-async function composeFilesAndDir(dir: string, newDir: string) {
+function getTmplDir(options: ProjectOptions) {
+  const files = fs.readdirSync(join(PKG_ROOT, "src/templates"));
+  const isValidType = files.includes(options.type);
+  if (isValidType) {
+    return join(PKG_ROOT, `src/templates/${options.type}`);
+  }
+}
+
+function composeFilesAndDir(dir: string, newDir: string) {
   try {
-    const files = await readdir(dir);
+    const files = fs.readdirSync(dir);
     for (const file of files) {
       const fpath = join(dir, file);
-      const fstat = await stat(fpath);
+      const fstat = fs.statSync(fpath);
       if (fstat.isFile()) {
         const formmatedFileName = file.startsWith("_")
           ? file.replace("_", ".")
           : file;
-        const data = await readFile(fpath, { encoding: "utf-8" });
-        await writeFile(join(newDir, formmatedFileName), data, {
-          encoding: "utf-8",
-        });
+        const data = fs.readFileSync(fpath, "utf-8");
+        fs.writeFileSync(join(newDir, formmatedFileName), data, "utf-8");
       }
       if (fstat.isDirectory()) {
         const subDir = join(newDir, file);
-        await mkdir(subDir);
+        fs.mkdirSync(subDir);
         composeFilesAndDir(fpath, subDir);
       }
     }
@@ -48,14 +69,14 @@ async function composeFilesAndDir(dir: string, newDir: string) {
   }
 }
 
-async function scaffoldProject(pkgDir: string) {
+function scaffoldProject(pkgDir: string) {
   const userDir = join(__dirname, "new-app");
-  // const userDir = resolveProjectDir(pkgDir); // final
-  await mkdir(userDir);
+  fs.mkdirSync(userDir);
   composeFilesAndDir(pkgDir, userDir);
 }
 
-(async () => {
-  const projectDir = await getTmplDir();
+(() => {
+  const projectDir = getTmplDir(projectOpts);
+  buildConfigs(projectOpts, projectDir);
   scaffoldProject(projectDir);
 })();

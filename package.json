@@ -1,16 +1,18 @@
 {
-  "name": "@stechie/stn-build",
+  "name": "create-smooth-app",
   "version": "1.0.0",
   "description": "Freestyle",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "scripts": {
-    "typecheck": "tsc",
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
     "build": "rm -rf dist && tsup",
     "test": "npm run lint && jest",
     "start": "npm run build && node dist/index.js"
+  },
+  "bin": {
+    "create-smooth-app": "/dist/index.js"
   },
   "type": "module",
   "files": [
@@ -18,13 +20,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diabeney/stn-build.git"
+    "url": "git+https://github.com/diabeney/create-smooth-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/diabeney/stn-build/issues"
+    "url": "https://github.com/diabeney/create-smooth-app/issues"
   },
   "devDependencies": {
     "@babel/types": "^7.21.5",

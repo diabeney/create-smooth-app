@@ -5,25 +5,20 @@
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "scripts": {
-    "typecheck": "tsc",
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
     "build": "npm run clean && tsup",
-    "start": "node dist/index.mjs"
+    "start": "npm run build && node dist/index.js"
   },
   "files": [
-    "./dist"
+    "./dist/**/*"
   ],
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/diabeney/stn-build.git"
+    "type": "git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/diabeney/stn-build/issues"
-  },
   "exports": {
     "default": "./dist/index.js",
     "require": "./dist/index.js",
