@@ -1,3 +1,3 @@
 # create-smooth-app
-React Apps and NPM Package Project template Generator, typescript by default.
+React Apps and NodeJS Projects template Generator, typescript by default.
 Name inspired by smoothG 
