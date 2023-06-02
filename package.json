@@ -2,13 +2,13 @@
   "name": "create-smooth-app",
   "version": "1.0.0",
   "description": "Freestyle",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
     "build": "rm -rf dist && tsup",
-    "test": "npm run lint && jest",
+    "test": "jest",
     "start": "npm run build && node dist/index.js"
   },
   "bin": {

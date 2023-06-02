@@ -1,15 +1,19 @@
 #!/usr/bin/env node
-
 import * as fs from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { ProjectOptions } from "./types/types";
-import { moduleFormat } from "./utils/utils";
+import {
+  openJSONSync,
+  moduleFormat,
+  configNameAndPath,
+  buildTsupConfig,
+} from "./utils/utils";
+import { BuildConfigObj, ProjectOptions, JsonFiles } from "./types/types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PKG_ROOT = join(__dirname, "../");
+export const PKG_ROOT = join(__dirname, "../");
 
 const projectOpts: ProjectOptions = {
   name: "diabene",
@@ -23,15 +27,22 @@ const projectOpts: ProjectOptions = {
 
 function buildConfigs(projectOpts: ProjectOptions, rootDir: string) {
   const format = moduleFormat(projectOpts);
-  const configName = join(rootDir, "tsconfig.json");
-  const moduleFormatConfig = join(
-    PKG_ROOT,
-    `src/templates/configs/Typescript/tsconfig.${format}.json`
+  const jsonFiles: JsonFiles[] = ["tsconfig.json", "package.json"];
+  const jsonFilesObj = jsonFiles.map(
+    (file): BuildConfigObj => ({
+      __ROOT: PKG_ROOT,
+      projectRootDir: rootDir,
+      configName: file,
+      format: format,
+    })
   );
+
   try {
-    const content = fs.readFileSync(moduleFormatConfig, "utf-8");
-    const jsonData = JSON.parse(content);
-    fs.writeFileSync(configName, JSON.stringify(jsonData, null, 2));
+    buildTsupConfig(rootDir, format);
+    jsonFilesObj.forEach((json) => {
+      const { configNamePath, path } = configNameAndPath(json);
+      openJSONSync(configNamePath, path);
+    });
   } catch (err) {
     console.log("error");
   }
