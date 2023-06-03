@@ -7,23 +7,15 @@ import {
   moduleFormat,
   configNameAndPath,
   buildTsupConfig,
+  resolveProjectDir,
 } from "./utils/utils";
 import { BuildConfigObj, ProjectOptions, JsonFiles } from "./types/types";
+import { CLI } from "./cli/cli";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export const PKG_ROOT = join(__dirname, "../");
-
-const projectOpts: ProjectOptions = {
-  name: "diabene",
-  type: "npm",
-  configs: {
-    npm: {
-      nodeModuleFormat: "cjs",
-    },
-  },
-};
+const PKG_ROOT = join(__dirname, "../");
 
 function buildConfigs(projectOpts: ProjectOptions, rootDir: string) {
   const format = moduleFormat(projectOpts);
@@ -80,14 +72,16 @@ function composeFilesAndDir(dir: string, newDir: string) {
   }
 }
 
-function scaffoldProject(pkgDir: string) {
-  const userDir = join(__dirname, "new-app");
+function scaffoldProject(pkgDir: string, name: string) {
+  const userDir = resolveProjectDir(name, __dirname);
   fs.mkdirSync(userDir);
   composeFilesAndDir(pkgDir, userDir);
 }
 
-(() => {
-  const projectDir = getTmplDir(projectOpts);
-  buildConfigs(projectOpts, projectDir);
-  scaffoldProject(projectDir);
+(async () => {
+  const projectOptions = (await CLI.Run()) as ProjectOptions;
+  const { name } = projectOptions;
+  const projectDir = getTmplDir(projectOptions);
+  buildConfigs(projectOptions, projectDir);
+  scaffoldProject(projectDir, name);
 })();

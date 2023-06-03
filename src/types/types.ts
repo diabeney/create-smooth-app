@@ -8,6 +8,8 @@ export type ProjectOptions = {
   name: string;
   type: "npm" | "react";
   configs: Configs;
+  installPackages: boolean;
+  packageManager?: "npm" | "yarn" | "pnpm";
 };
 
 export type BuildConfigObj = {

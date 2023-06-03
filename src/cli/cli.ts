@@ -1,11 +1,12 @@
 import { input, select, confirm } from "@inquirer/prompts";
-import { logger } from "../utils/utils";
 import chalk from "chalk";
+import { logger, validPackageName } from "../utils/utils";
 
-(async () => {
+async function getAnswers() {
   const name = await input({
     message: "What is the name of your project?",
     default: "my-smooth-app",
+    validate: validPackageName,
   });
   const type = await select({
     message: "What type of project are you builing?",
@@ -21,7 +22,7 @@ import chalk from "chalk";
     ],
   });
   let language = await select({
-    message: "Which language do you want to use",
+    message: "Which language do you want to use?",
     choices: [
       {
         name: `${chalk.yellow("JavaScript")}`,
@@ -33,20 +34,21 @@ import chalk from "chalk";
       },
     ],
   });
-  if (language === "JavaScript") {
-    logger.error(`No you should use ${chalk.blueBright("Typescipt")}`);
-    language = "Typescript";
-  }
 
-  if (language === "TypeScript") {
-    logger.success("You made the right choice!!");
+  {
+    if (language === "JavaScript") {
+      language = "TypeScript";
+      logger.info("No way!, you must use TypeScript");
+    } else {
+      logger.success("Yay!! you made the right choice!");
+    }
   }
 
   let configs;
   if (type === "npm") {
     configs = {
       npm: {
-        moduleFormat: await select({
+        nodeModuleFormat: await select({
           message: "Which module format do you want typescript to build to?",
           choices: [
             {
@@ -70,15 +72,46 @@ import chalk from "chalk";
     message: "Do you want us to install dependencies?",
   });
 
+  let pkg_manager;
+
+  if (installPackages) {
+    pkg_manager = await select({
+      message: "Which package manager do you use?",
+      choices: [
+        {
+          name: `npm`,
+          value: "npm",
+        },
+        {
+          name: `yarn`,
+          value: "yarn",
+        },
+        {
+          name: `pnpm`,
+          value: "pnpm",
+        },
+      ],
+    });
+  }
+
   const answers = {
     name: name,
     type: type,
     language: language,
     configs: configs,
     installPackages: installPackages,
+    packageManager: pkg_manager,
   };
 
-  console.log(answers);
-})();
+  return answers;
+}
+let CLI;
+if (process.stdout.isTTY) {
+  CLI = {
+    Run: getAnswers,
+  };
+} else {
+  logger.error("Your terminal is not interactive!");
+}
 
-export {};
+export { CLI };
