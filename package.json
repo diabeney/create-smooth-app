@@ -9,7 +9,7 @@
     "lint": "eslint --ext .ts .",
     "build": "rm -rf dist && tsup",
     "test": "jest",
-    "start": "npm run build && node dist/index.js"
+    "start": "node dist/cli.js"
   },
   "bin": {
     "create-smooth-app": "/dist/index.js"
@@ -41,7 +41,7 @@
     "tsup": "^6.7.0"
   },
   "dependencies": {
-    "chalk": "^5.2.0",
-    "inquirer": "^9.2.0"
+    "@inquirer/prompts": "^1.2.3",
+    "chalk": "^5.2.0"
   }
 }
