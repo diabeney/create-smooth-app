@@ -15,7 +15,7 @@ import { CLI } from "./cli/cli";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PKG_ROOT = join(__dirname, "../");
+const PKG_ROOT = join(__dirname);
 
 function buildConfigs(projectOpts: ProjectOptions, rootDir: string) {
   const format = moduleFormat(projectOpts);
@@ -41,10 +41,10 @@ function buildConfigs(projectOpts: ProjectOptions, rootDir: string) {
 }
 
 function getTmplDir(options: ProjectOptions) {
-  const files = fs.readdirSync(join(PKG_ROOT, "src/templates"));
+  const files = fs.readdirSync(join(PKG_ROOT, "templates"));
   const isValidType = files.includes(options.type);
   if (isValidType) {
-    return join(PKG_ROOT, `src/templates/${options.type}`);
+    return join(PKG_ROOT, `templates/${options.type}`);
   }
 }
 

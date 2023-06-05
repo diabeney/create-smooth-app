@@ -37,12 +37,9 @@ function generateConfigPath(
   type: JsonFiles
 ) {
   if (type === "tsconfig.json") {
-    return join(
-      root,
-      `src/templates/configs/Typescript/tsconfig.${format}.json`
-    );
+    return join(root, `/templates/configs/Typescript/tsconfig.${format}.json`);
   }
-  return join(root, `src/templates/configs/Package/package.${format}.json`);
+  return join(root, `/templates/configs/Package/package.${format}.json`);
 }
 
 function openJSONSync(configName: string, configDir: string) {
