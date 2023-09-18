@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "module": "ESNext"
+    "module": "esnext",
+    "esModuleInterop": true
   },
   "exclude": ["/src/templates"]
 }

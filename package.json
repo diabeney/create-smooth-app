@@ -1,32 +1,27 @@
 {
-  "name": "create-smooth-app",
-  "version": "1.0.1",
-  "description": "Freestyle",
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "author": "",
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
-    "build": "rm -rf dist && tsup --publicDir src",
-    "test": "jest",
-    "start": "node dist/index.js"
+    "build": "rm -rf dist && rm -rf my-smooth-app && tsup --publicDir src",
+    "test": "npm run lint && jest",
+    "start": "npm run build && node dist/index.js"
   },
-  "bin": {
-    "create-smooth-app": "/dist/index.js"
-  },
-  "type": "module",
   "files": [
     "./dist/**/*"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diabeney/create-smooth-app.git"
+    "url": ""
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/diabeney/create-smooth-app/issues"
+    "url": ""
   },
   "devDependencies": {
     "@babel/types": "^7.21.5",
@@ -35,13 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
-    "jest": "^29.5.0",
     "prettier": "2.8.8",
-    "ts-jest": "^29.1.0",
     "tsup": "^6.7.0"
-  },
-  "dependencies": {
-    "@inquirer/prompts": "^1.2.3",
-    "chalk": "^5.2.0"
   }
 }

@@ -6,6 +6,10 @@ const config: Options = {
   target: "esnext",
   format: ["esm"],
   skipNodeModulesBundle: true,
+  clean: true,
+  treeshake: true,
+  minifySyntax: true,
+  minifyIdentifiers: true,
 };
 
 export default config;
