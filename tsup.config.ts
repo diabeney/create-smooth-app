@@ -1,15 +1,10 @@
-import type { Options } from "tsup";
+import { defineConfig } from "tsup";
 
-const config: Options = {
-  entry: ["src/index.ts"],
-  dts: true,
-  target: "esnext",
-  format: ["esm"],
-  skipNodeModulesBundle: true,
+export default defineConfig({
+  entry: ["src/index.ts", "src/cli/cli.ts"],
   clean: true,
-  treeshake: true,
+  publicDir: "public",
+  format: ["esm"],
+  target: "esnext",
   minifySyntax: true,
-  minifyIdentifiers: true,
-};
-
-export default config;
+});

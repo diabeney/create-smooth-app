@@ -2,20 +2,14 @@
   "main": "./dist/index.js",
   "author": "",
   "type": "module",
-  "bin": {
-    "create-smooth-app": "/dist/cli/cli.js"
-  },
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts .",
     "build": "rm -rf dist && tsup",
-    "test": "vitest",
-    "dev": "npm run build && node dist/index.js",
-    "cli": "npm run build && node dist/cli/cli.js"
+    "test": "npm run lint && vitest",
+    "start": "npm run build && node dist/index.js"
   },
-  "files": [
-    "./dist/**/*"
-  ],
+  "files": ["./dist/**/*"],
   "repository": {
     "type": "git",
     "url": ""
@@ -25,6 +19,9 @@
   "bugs": {
     "url": ""
   },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
   "devDependencies": {
     "@types/node": "^18.16.3",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
@@ -33,9 +30,5 @@
     "prettier": "2.8.8",
     "tsup": "^6.7.0",
     "vitest": "^0.34.5"
-  },
-  "dependencies": {
-    "@inquirer/prompts": "^3.1.2",
-    "chalk": "^5.3.0"
   }
 }
