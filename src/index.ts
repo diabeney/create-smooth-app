@@ -70,7 +70,7 @@ async function scaffoldProject(
 ) {
   const { projectName, type } = projectOptions;
   const dir = resolveProjectDir(projectName);
-  if (!existsSync(dir)) mkdirSync(dir);
+  existsSync(dir) || mkdirSync(dir);
   const templateDir = getTmplDir(type);
   createFilesSync(templateDir, dir);
   buildConfigs(dir, projectOptions);
@@ -80,6 +80,7 @@ async function scaffoldProject(
 function resolveSuccess({ installDeps, projectName, packageManager }: Options) {
   try {
     if (installDeps) {
+      process.chdir(join(process.cwd(), projectName));
       installPackages(packageManager);
     } else {
       console.log(

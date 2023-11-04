@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { Options } from "../types/types.js";
 import chalk from "chalk";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 const logger = {
   success: (msg: string) => chalk.greenBright(msg),
   error: (msg: string) => chalk.redBright(msg),
@@ -45,10 +45,25 @@ function buildTsupConfig(rootDir: string, format: Options["format"]) {
 }
 
 function installPackages(packageManager: Options["packageManager"]) {
-  const installCommand =
-    packageManager === "yarn" ? "yarn add" : `${packageManager} install`;
+  const installCommand = packageManager === "yarn" ? "yarn" : packageManager;
   console.log(logger.info("Installing dependencies. Please wait..."));
-  execSync(installCommand);
+
+  const installProcess = spawnSync(installCommand || "npm", ["install"], {
+    stdio: "inherit",
+    shell: true,
+  });
+
+  if (installProcess.error) {
+    console.error("Failed to install dependencies:", installProcess.error);
+    process.exit(1);
+  } else if (installProcess.status !== 0) {
+    console.error(
+      "Failed to install dependencies. Exit code:",
+      installProcess.status
+    );
+    process.exit(1);
+  }
+
   console.log(logger.success("Dependencies installed successfully!"));
 }
 
